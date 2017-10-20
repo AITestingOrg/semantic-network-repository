@@ -1,0 +1,26 @@
+@import '~@angular/material/theming';
+@include mat-core();
+$primary: mat-palette($mat-green);
+$accent:  mat-palette($mat-indigo);
+$warn:    mat-palette($mat-red);
+$theme: mat-light-theme($primary, $accent, $warn);
+@include angular-material-theme($theme);
+
+body.aide {
+    margin:0px;
+    padding:0px;
+    font-family: 'Roboto', sans-serif;
+    background-color:#dadada;
+
+    .pull-left {
+        float:left;
+    }
+
+    .pull-right {
+        float:right;
+    }
+
+    .light {
+        font-weight:100;
+    }
+}
