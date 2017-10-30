@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    build: ./
+    ports:
+     - "5000:5000"
+
+  neo4j:
+    image: neo4j:3.2.5
+    ports:
+     - "17474:7474"
+    volumes:
+     - ./db/dbms:/data/dbms
+
+volumes:
+  neo4j:

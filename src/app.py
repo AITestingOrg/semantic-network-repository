@@ -1,15 +1,13 @@
-import sys
-# required to load other directories modules
-sys.path.insert(0, './services')
-
-from flask import Flask, Blueprint
+from flask import Flask
 from .controllers.object_api import object
+from .controllers.edge_api import edge
 
 # initialize the flask app
 app = Flask(__name__)
 
-# register the blueprint
+# register the blueprints from controllers
 app.register_blueprint(object)
+app.register_blueprint(edge)
 
 # setup default route
 @app.route("/")
