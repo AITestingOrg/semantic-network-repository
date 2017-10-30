@@ -1,17 +1,15 @@
 import sys
 # required to load other directories modules
-sys.path.insert(0, './network')
+sys.path.insert(0, './services')
 
 from flask import Flask, Blueprint
-
-# load a controller blueprint
-object_api = Blueprint('object_api', __name__, template_folder='network')
+from .controllers.object_api import object
 
 # initialize the flask app
 app = Flask(__name__)
 
 # register the blueprint
-app.register_blueprint(object_api)
+app.register_blueprint(object)
 
 # setup default route
 @app.route("/")
