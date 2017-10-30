@@ -1,5 +1,5 @@
 # AI Domain Expert
-https://travis-ci.org/AITestingOrg/domain-expert-prototype.svg?branch=master
+![alt text](https://travis-ci.org/AITestingOrg/domain-expert-prototype.svg?branch=master "Build Status")
 
 ## Backend Setup
 * Install Python, Mongo, and Neo4J
