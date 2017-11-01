@@ -12,7 +12,7 @@ services:
   neo4j:
     image: neo4j:3.2.5
     ports:
-     - "17474:7474"
+     - "7474:7474"
     volumes:
      - ./db/dbms:/data/dbms
 
