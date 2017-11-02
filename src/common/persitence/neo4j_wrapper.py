@@ -9,7 +9,8 @@ class Neo4jWrapper:
         self.session = self.driver.session()
 
     def __close__(self):
-        self.session.close()
+        if self.session:
+            self.session.close()
 
     def insertNode(self, node):
         self.__connect__()
