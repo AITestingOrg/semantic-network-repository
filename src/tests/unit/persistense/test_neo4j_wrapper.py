@@ -7,6 +7,8 @@ def test_connect_parameters(mocker):
     # arrange
     stub = mocker.stub(name='driver_stub')
     neo = Neo4jWrapper(stub, 'con', 'test')
+
+    # act
     neo.__connect__()
 
     # assert
@@ -18,10 +20,24 @@ def test_connect_parameters(mocker):
 # then the session should be closed.
 def test_close_session(mocker):
     # arrange
-    stub = mocker.stub(name='driver_stub')
-    neo = Neo4jWrapper(stub, 'con', 'test')
+    class DriverMock(object):
+        def session(self):
+            return self
+        def close(self):
+            pass
+
+    driverMock = DriverMock()
+
+    def mockFactory(param1, param2):
+        return driverMock
+
+    mocker.spy(mockFactory, 'close')
+
+    neo = Neo4jWrapper(driverMock, 'con', 'test')
     neo.__connect__()
 
+    # act
+    neo.__close__()
+
     # assert
-    stub.assert_called_once_with('con', 'test')
-    assert stub.call_count == 1
+    assert driverMock.close.call_count == 1

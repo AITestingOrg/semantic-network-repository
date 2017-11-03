@@ -12,6 +12,12 @@ class Neo4jWrapper:
         if self.session:
             self.session.close()
 
+    def __run__(self, query):
+        self.__connect__()
+        results = self.session.run(query)
+        self.__close__()
+        return results
+
     def insertNode(self, node):
         self.__connect__()
         self.session.run("CREATE (a:Person {name: {name}, title: {title}})",
@@ -19,7 +25,7 @@ class Neo4jWrapper:
         self.__close__()
 
     def getNodes(self):
-        pass
+        return self.__run__('MATCH(n) RETURN(n);')
 
     def getNode(self, name):
         pass
@@ -28,7 +34,4 @@ class Neo4jWrapper:
         pass
 
     def execQuery(self, query):
-        self.__connect__()
-        results = self.session.run(query)
-        self.__close__()
-        return results
+        return self.__run__(query)
