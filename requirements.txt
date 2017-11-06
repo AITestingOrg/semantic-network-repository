@@ -2,3 +2,4 @@ flask
 neo4j-driver
 pymongo
 pytest-mock
+celery
