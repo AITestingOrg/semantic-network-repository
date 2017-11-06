@@ -1,33 +1,22 @@
-class Neo4jWrapper:
+from .neo4j_api import Neo4jApi
+
+
+class Neo4jWrapper(Neo4jApi):
     def __init__(self, driver, connection, auth):
-        self.graphDb = driver
-        self.auth = auth
-        self.connection = connection
+        super.__init__(driver, connection, auth)
 
-    def __connect__(self):
-        self.driver = self.graphDb(self.connection, self.auth)
-        self.session = self.driver.session()
+    def insert_node(self, node):
+        self._run('CREATE (a:Node {name: {name}}, {created_at: {timestamp()}})', node)
 
-    def __close__(self):
-        self.session.close()
+    def get_nodes(self):
+        return self._run('MATCH(n) RETURN(n);')
 
-    def insertNode(self, node):
-        self.__connect__()
-        self.session.run("CREATE (a:Person {name: {name}, title: {title}})",
-                    {"name": "Arthur", "title": "King"})
-        self.__close__()
+    def get_node(self, name):
+        return self._run(f'MATCH (n) WHERE n.name = "{name}" RETURN n')
 
-    def getNodes(self):
-        pass
+    def update_node(self, old_name, node):
+        node.old_name = old_name
+        self._run('MATCH (p:Person{old_name: name}) WITH p, p {.*} as snapshot SET p.name = name RETURN snapshot', node)
 
-    def getNode(self, name):
-        pass
-
-    def updateNode(self, node):
-        pass
-
-    def execQuery(self, query):
-        self.__connect__()
-        results = self.session.run(query)
-        self.__close__()
-        return results
+    def exec_query(self, query):
+        return self._run(query)

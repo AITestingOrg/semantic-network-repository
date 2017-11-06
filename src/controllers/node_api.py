@@ -1,17 +1,17 @@
 from flask import Blueprint, request
 from .api import Api
 
-edge = Blueprint('edge', __name__, url_prefix='/edges')
+node = Blueprint('node', __name__, url_prefix='/nodes')
 
 
-@edge.route("/", methods=['GET', 'POST'])
-def get_edges():
+@node.route("/", methods=['GET', 'POST'])
+def get_nodes():
     if request.method == 'POST':
         return 'posted'
     elif request.method == 'GET':
         return Api.respond([], True)
 
 
-@edge.route("/<edge_id>", methods=['GET', 'PUT', 'DELETE'])
-def get_edge(edge_id):
+@node.route("/<node_id>", methods=['GET', 'PUT', 'DELETE'])
+def get_node(node_id):
     return Api.respond({}, True)
