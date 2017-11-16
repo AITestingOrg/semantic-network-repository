@@ -1,6 +1,10 @@
 from flask import Flask
+from flask import jsonify
 from .controllers.node_api import node
 from .controllers.edge_api import edge
+from .analysis.nlp import NLP
+import urllib
+
 
 # initialize the flask app
 app = Flask(__name__)
@@ -14,6 +18,13 @@ app.register_blueprint(edge)
 @app.route("/")
 def hello():
     return "Hello World!"
+
+# prototype junk
+@app.route('/api/query/<text>')
+def text_input(text):
+    text = urllib.parse.unquote(text)
+    return jsonify(NLP().find_useful_stuff(text))
+
 
 
 # "main" function
