@@ -3,7 +3,6 @@ from flask import jsonify
 from .controllers.node_api import node
 from .controllers.edge_api import edge
 from .analysis.nlp import NLP
-import urllib
 
 
 # initialize the flask app
@@ -22,7 +21,6 @@ def hello():
 # prototype junk
 @app.route('/api/query/<text>')
 def text_input(text):
-    text = urllib.parse.unquote(text)
     return jsonify(NLP().find_useful_stuff(text))
 
 

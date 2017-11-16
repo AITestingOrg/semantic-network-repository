@@ -13,18 +13,18 @@ class NLP:
         # Lexicon
         output['lexicon'] = []
         for token in parsedData:
-            output['lexicon'].append(''.join([token.orth_, token.pos_, token.lemma_]))
+            output['lexicon'].append(' '.join([token.orth_, token.pos_, token.lemma_]))
 
         # Dependencies
         output['dependencies'] = []
         for token in parsedData:
-            output['dependencies'].append(''.join([token.orth_, token.dep_, token.head.orth_, ''.join([t.orth_ for t in token.lefts]), ''.join([t.orth_ for t in token.rights])]))
+            output['dependencies'].append(' '.join([token.orth_, token.dep_, token.head.orth_, ' '.join([t.orth_ for t in token.lefts]), ' '.join([t.orth_ for t in token.rights])]))
 
         # Entities
         output['entities'] = []
         ents = list(parsedData.ents)
         for entity in ents:
-            output['entities'].append(''.join([entity.label, entity.label_, ' '.join(t.orth_ for t in entity)]))
+            output['entities'].append(' '.join([entity.label, entity.label_, ' '.join(t.orth_ for t in entity)]))
 
         # Find all the subject verb pairs
         output['svos'] = []
@@ -32,7 +32,7 @@ class NLP:
 
         # Display graph
         output['svgs'] = []
-        output['svgs'].append(displacy.render(parsedData, style='deps'))
+        output['svgs'].append(displacy.render(parsedData, style='dep'))
         output['svgs'].append(displacy.render(parsedData, style='ent'))
 
         return output
