@@ -24,7 +24,7 @@ class NLP:
         output['entities'] = []
         ents = list(parsedData.ents)
         for entity in ents:
-            output['entities'].append(' '.join([entity.label, entity.label_, ' '.join(t.orth_ for t in entity)]))
+            output['entities'].append(' '.join([str(entity.label), entity.label_, ' '.join([str(t.orth_) for t in entity])]))
 
         # Find all the subject verb pairs
         output['svos'] = []

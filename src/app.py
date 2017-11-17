@@ -3,10 +3,12 @@ from flask import jsonify
 from .controllers.node_api import node
 from .controllers.edge_api import edge
 from .analysis.nlp import NLP
+from flask_cors import CORS
 
 
 # initialize the flask app
 app = Flask(__name__)
+CORS(app)
 
 # register the blueprints from controllers
 app.register_blueprint(node)
