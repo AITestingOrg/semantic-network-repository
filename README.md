@@ -2,6 +2,9 @@
 ![alt text](https://travis-ci.org/AITestingOrg/domain-expert-prototype.svg?branch=master "Build Status")
 
 # Setup
+## Requirements
+* Python 3.x
+
 ## NLP Setup
 ### Install NLTK
 * `pip install -U nltk`
