@@ -14,15 +14,24 @@ class NLP:
 
     def find_useful_stuff(self, text, debug = False):
         output = {}
-        subject = None
         output['text'] = text
-        output['lexicon'] = []
-        output['dependencies'] = []
+        if len(text.split(' ')) == 1:
+            ideas = self.db.get_direct_relations(text.strip())
+            related_nodes = {}
+            for idea in ideas.records():
+                if idea['r'].type not in related_nodes:
+                    related_nodes[idea['r'].type] = []
+                related_nodes[idea['r'].type].append(idea['node'].properties['name'])
+            output['ideas'] = related_nodes
+            return output
+
         parsedData = nlp(text)
 
         for sent in parsedData.sents:
-            sent = nlp(''.join(sent.string.strip()))
-            self.process_sentence(sent, output, debug)
+            sent = ''.join(sent.string.strip())
+            if len(sent) > 3:
+                sent = nlp(sent)
+                self.process_sentence(sent, output, debug)
 
         return output
 
@@ -49,12 +58,13 @@ class NLP:
         print('SVOs')
         for svo in output['svos']:
             print('\t' + str(svo))
-            if svo[0] == 'there' and svo[1] == 'is':
-                subject = svo[2]
-                node = self.db.get_node(subject)
-                if node == None:
-                    self.db.insert_node(Node(subject))
-                break
+            if output['is_question'] == False:
+                if svo[0] == 'there' and svo[1] == 'is':
+                    subject = svo[2]
+                    node = self.db.get_node(subject)
+                    if node == None:
+                        self.db.insert_node(Node(subject))
+                    break
 
             svo = nlp(' '.join(svo))
             if spacy.explain(svo[0].tag_).startswith('noun') and svo[1].lemma_ != '!':
@@ -64,6 +74,8 @@ class NLP:
             output['result'] = structure['nsubj']
 
         if debug:
+            output['lexicon'] = []
+            output['dependencies'] = []
             # Lexicon and Dependencies
             lexicon, deps = self.extract_debug_data(sent)
             output['lexicon'].extend(lexicon)

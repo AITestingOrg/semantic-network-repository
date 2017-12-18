@@ -147,23 +147,6 @@ def findSVOs(tokens):
                     svos.append((sub.lower_, "!" + v.lower_ if verbNegated or objNegated else v.lower_, obj.lower_))
     return svos
 
-def getAbuserOntoVictimSVOs(tokens):
-    maleAbuser = {'he', 'boyfriend', 'bf', 'father', 'dad', 'husband', 'brother', 'man'}
-    femaleAbuser = {'she', 'girlfriend', 'gf', 'mother', 'mom', 'wife', 'sister', 'woman'}
-    neutralAbuser = {'pastor', 'abuser', 'offender', 'ex', 'x', 'lover', 'church', 'they'}
-    victim = {'me', 'sister', 'brother', 'child', 'kid', 'baby', 'friend', 'her', 'him', 'man', 'woman'}
-
-    svos = findSVOs(tokens)
-    wnl = WordNetLemmatizer()
-    passed = []
-    for s, v, o in svos:
-        s = wnl.lemmatize(s)
-        v = "!" + wnl.lemmatize(v[1:], 'v') if v[0] == "!" else wnl.lemmatize(v, 'v')
-        o = "!" + wnl.lemmatize(o[1:]) if o[0] == "!" else wnl.lemmatize(o)
-        if s in maleAbuser.union(femaleAbuser).union(neutralAbuser) and o in victim:
-            passed.append((s, v, o))
-    return passed
-
 def printDeps(toks):
     for tok in toks:
         print(tok.orth_, tok.dep_, tok.pos_, tok.head.orth_, [t.orth_ for t in tok.lefts], [t.orth_ for t in tok.rights])

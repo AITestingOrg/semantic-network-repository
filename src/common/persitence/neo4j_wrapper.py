@@ -17,7 +17,7 @@ class Neo4jWrapper(Neo4jApi):
 
     def insert_edge(self, source, target, edge):
         # check if the relationship already exits
-        matches = self._run('MATCH (x:Idea {name:{source}})-[r:BE]-(z:Idea {name:{target}}) RETURN x, r, z', {'source': source, 'target': target })
+        matches = self._run('MATCH (x:Idea {name:{source}})-[r:' + edge.upper() + ']-(z:Idea {name:{target}}) RETURN x, r, z', {'source': source, 'target': target })
         if matches.single() != None:
             return
 
@@ -32,6 +32,12 @@ class Neo4jWrapper(Neo4jApi):
         # create the relationship
         self._run('MATCH (u:Idea {name: {source}}), (r:Idea {name: {target}}) \
             CREATE (u)-[:' + edge.upper() + ']->(r)', {'source': source, 'target': target })
+
+    def get_markov_blanket(self, name):
+        return self._run('MATCH (parent:Idea)-[]->(a:Idea)-[]->(child:Idea) WHERE a.name = "' + name + '" WITH a, parent, child MATCH (otherParent:Idea)-[]->(child) WHERE otherParent <> a RETURN parent, a, otherParent, child')
+
+    def get_direct_relations(self, name):
+        return self._run('match (a:Idea {name:"' + name + '"})-[r]-(node) return a, r,node;')
 
     def update_node(self, old_name, node):
         node.old_name = old_name

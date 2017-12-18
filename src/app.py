@@ -20,8 +20,8 @@ CORS(app)
 app.register_blueprint(node)
 app.register_blueprint(edge)
 
-for sent in brown.sents():
-    NLP().find_useful_stuff(re.sub(r'[^\w]', ' ', ' '.join(sent)))
+#for sent in brown.sents():
+#    NLP().find_useful_stuff(re.sub(r'[^\w]', ' ', ' '.join(sent)))
 
 # setup default route
 @app.route("/")
