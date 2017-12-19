@@ -39,6 +39,9 @@ class Neo4jWrapper(Neo4jApi):
     def get_direct_relations(self, name):
         return self._run('match (a:Idea {name:"' + name + '"})-[r]-(node) return a, r,node;')
 
+    def get_node_from_relationship(self, name, edge):
+        return self._run('match (a:Idea {name:"' + name + '"})-[r:' + edge.upper() + ']-(node) return node;')
+
     def update_node(self, old_name, node):
         node.old_name = old_name
         self._run('MATCH (p:Person{old_name: name}) WITH p, p {.*} as snapshot SET p.name = name RETURN snapshot', node)

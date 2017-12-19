@@ -21,7 +21,7 @@ app.register_blueprint(node)
 app.register_blueprint(edge)
 
 #for sent in brown.sents():
-#    NLP().find_useful_stuff(re.sub(r'[^\w]', ' ', ' '.join(sent)))
+#    NLP().find_useful_stuff(re.sub(r'[^\w]', ' ', ' '.join(sent)), False, True)
 
 # setup default route
 @app.route("/")
@@ -37,6 +37,14 @@ def text_input(text):
 @app.route('/api/query/--debug/<text>')
 def text_input_debug(text):
     return jsonify(NLP().find_useful_stuff(text, True))
+
+@app.route('/api/statement/<text>')
+def text_statement(text):
+    return jsonify(NLP().find_useful_stuff(text, False, True))
+
+@app.route('/api/statement/--debug/<text>')
+def text_statement_debug(text):
+    return jsonify(NLP().find_useful_stuff(text, True, True))
 
 
 
