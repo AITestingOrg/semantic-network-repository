@@ -16,9 +16,10 @@
 * Choose whichever Corpora.
 
 ### Install SpaCy
-* `pip install -u spacy`
+* `pip install -U spacy`
 * On Windows ensure you have Visual Studio C++ Build Tools 2015 installed from http://landinghub.visualstudio.com/visual-cpp-build-tools
-
+* Download english language model
+* `python -m spacy download en`
 ### Install Neo4j
 * Download and install from https://neo4j.com/download/?ref=hro
 * Start the service
