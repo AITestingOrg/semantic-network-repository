@@ -1,4 +1,6 @@
 flask
+flask_cors
 neo4j-driver
 pymongo
 pytest-mock
+celery

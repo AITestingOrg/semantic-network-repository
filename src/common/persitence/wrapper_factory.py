@@ -11,7 +11,7 @@ class WrapperFactory:
         return Neo4jWrapper(GraphDatabase.driver, connect, auth)
 
     @staticmethod
-    def build_neo4j_init_wrapper(self, host, port, username, password):
+    def build_neo4j_init_wrapper(host, port, username, password):
         connect = f'bolt://{host}:{port}'
         auth = basic_auth(username, password)
         return Neo4jInitWrapper(GraphDatabase.driver, connect, auth)
