@@ -4,3 +4,5 @@ neo4j-driver
 pymongo
 pytest-mock
 celery
+slackclient==1.2.1
+websocket-client>=0.32.0,<=0.40.0

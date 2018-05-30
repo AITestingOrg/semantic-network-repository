@@ -1,9 +1,9 @@
 import spacy
 from spacy import displacy
 
-from ..common.models.node import Node
-from .algorithms.subject_object_extraction import findSVOs
-from ..common.persitence.wrapper_factory import WrapperFactory
+from common.models.node import Node
+from analysis.algorithms.subject_object_extraction import findSVOs
+from common.persitence.wrapper_factory import WrapperFactory
 
 nlp = spacy.load('en')
 state = {}
@@ -34,7 +34,7 @@ class NLP:
                 sent = nlp(sent)
                 self.process_sentence(sent, output, debug, write)
 
-        if 'nsubj' in output['structure']:
+        if 'structure' in output and 'nsubj' in output['structure']:
             ideas = self.db.get_direct_relations(self.nsubj.lemma_)
             related_nodes = {}
             for idea in ideas.records():
@@ -66,7 +66,12 @@ class NLP:
                 nsubj_exp = spacy.explain(token.tag_)
 
                 answer = self.db.get_node_from_relationship(token.lemma_, token.head.lemma_).single()
-                output['answer'] = answer['node'].properties['name'] if answer != None else None
+                generalized_answer = self.db.get_most_generalized_relationship(token.lemma_, token.head.lemma_)
+                if generalized_answer:
+                    output['gen_answer'] = ""
+                    for result in generalized_answer:
+                        output['gen_answer'] += result['node'].properties['name'] + ', '
+                output['answer'] = answer['node'].properties['name'] if answer != None else "No"
             elif token.dep_ == 'ROOT':
                 output['structure']['root'] = token.text.lower()
             elif output['is_question'] and token.dep_ == 'dobj' or \
@@ -79,7 +84,12 @@ class NLP:
                 output['structure']['edge'] = token.head.lemma_
                 print('Querying for answer')
                 answer = self.db.get_node_from_relationship(token.lemma_, token.head.lemma_).single()
-                output['answer'] = answer['node'].properties['name'] if answer != None else None
+                generalized_answer = self.db.get_most_generalized_relationship(token.lemma_, token.head.lemma_)
+                if generalized_answer:
+                    output['gen_answer'] = ""
+                    for result in generalized_answer:
+                        output['gen_answer'] += result['node'].properties['name'] + ', '
+                output['answer'] = answer['node'].properties['name'] if answer != None else "No"
 
         if write:
             for svo in output['svos']:
