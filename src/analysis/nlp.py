@@ -1,5 +1,6 @@
 import spacy
 from spacy import displacy
+import re
 
 from common.models.node import Node
 from analysis.algorithms.subject_object_extraction import findSVOs
@@ -33,7 +34,6 @@ class NLP:
             if len(sent) > 3:
                 sent = nlp(sent)
                 self.process_sentence(sent, output, debug, write)
-
         if 'structure' in output and 'nsubj' in output['structure']:
             ideas = self.db.get_direct_relations(self.nsubj.lemma_)
             related_nodes = {}
@@ -42,7 +42,19 @@ class NLP:
                     related_nodes[idea['r'].type] = []
                 related_nodes[idea['r'].type].append(idea['node'].properties['name'])
             output['ideas'] = [[output['structure']['nsubj'].strip(), edge, ', '.join(related_nodes[edge])] for edge in related_nodes]
-
+        elif re.search(r'@(\S+)', text):
+            print('Found user')
+            m = re.search(r'@(\S+)', text)
+            print(m.group(0))
+            user = m.group(0).replace('>', '')
+            output['structure'] = {'nsubj': user}
+            ideas = self.db.get_direct_relations(user)
+            related_nodes = {}
+            for idea in ideas.records():
+                if idea['r'].type not in related_nodes:
+                    related_nodes[idea['r'].type] = []
+                related_nodes[idea['r'].type].append(idea['node'].properties['name'])
+            output['ideas'] = [[output['structure']['nsubj'].strip(), edge, ', '.join(related_nodes[edge])] for edge in related_nodes]
         return output
 
     def process_sentence(self, sent, output, debug, write):
